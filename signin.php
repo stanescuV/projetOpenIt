@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="rectangle"></div>
+    
 </body>
 </html>
