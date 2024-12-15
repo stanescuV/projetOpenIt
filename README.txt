@@ -3,3 +3,8 @@ LIEN FIGMA : https://www.figma.com/design/TZXzJER3YfVcOnQWoNHZon/OPEN-IT-(PHP)?n
 LIEN GIT : https://github.com/stanescuV/projetOpenIt
 
 LIEN GIT CLONE : https://github.com/stanescuV/projetOpenIt.git
+
+Aymane 
+Gabriel 
+Victor
+Ugo
