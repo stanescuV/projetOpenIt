@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_page_fav.css">
     <title>Document</title>
 </head>
 <body>
@@ -20,7 +20,7 @@
         <p><a href="page_fav.html">Liste Favorite</a></p>
     </div>
     <div id="recherche">
-        <form><input type="text" class="search-input" placeholder="Rechercher"></form>
+        <form><input type="text" placeholder="Rechercher"></form>
     </div>
     <div id="settings"><img src="images/settings.png" alt="images"></div>
     <div id="button_add">
