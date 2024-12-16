@@ -4,8 +4,13 @@
             box-sizing: border-box;
         }
 
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
         body {
             font-family: 'Quicksand', sans-serif;
+            
         }
 
         #container {
