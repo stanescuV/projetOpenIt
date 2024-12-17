@@ -1,0 +1,105 @@
+/* Général */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 1064px;
+    height: 579px;
+    background: linear-gradient(107deg, rgba(36, 105, 249, 0.61) 50.88%, #1F66FF 93.69%);
+    border: 1px solid #000;
+    border-radius: 142px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 40px;
+    margin: 0 auto;
+    flex-shrink: 0;
+  }
+  
+  .logo img {
+    max-width: 250px;
+    margin-bottom: 20px;
+  }
+  
+  .login-form input[type="email"],
+  .login-form input[type="password"] {
+    display: flex;
+    width: 648px;
+    height: 60px;
+    padding: 16px 22px;
+    align-items: flex-start;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 40px;
+    border: 1px solid #F5F5F5;
+    background: #FFF;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 20px;
+  }
+  
+  .login-form input[type="email"]:focus,
+  .login-form input[type="password"]:focus {
+    box-shadow: 0px 0px 5px rgba(36, 105, 249, 0.8);
+    border: 1px solid rgba(36, 105, 249, 0.8);
+  }
+  
+  .extra-options {
+    text-align: right;
+    font-size: 12px;
+  }
+  
+  .extra-options .forgot-password {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .extra-options .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  .login-form button {
+    background-color: #0056e0;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-form button:hover {
+    background-color: #003bb5;
+  }
+  
+  .login-form .create-account {
+    display: block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .login-form .create-account:hover {
+    text-decoration: underline;
+  }
+  
