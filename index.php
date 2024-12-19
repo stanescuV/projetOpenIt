@@ -13,9 +13,9 @@
                 <img src="images/openit_blue.png" alt="OpenIt Blue">
             </div>
             <div class="nav-links">
-                <a href="index.html">Acceuil</a>
-                <a href="index.html">Liste Films</a>
-                <a href="page_fav.html">Liste Favorite</a>
+                <a href="index.php">Acceuil</a>
+                <a href="index.php">Liste Films</a>
+                <a href="page_fav.php">Liste Favorite</a>
             </div>
             <div class="search-bar">
                 <input type="text" placeholder="Rechercher">
@@ -75,9 +75,9 @@
             </div>
 
             <div class='footerLinks'>
-                <a href="index.html">Acceuil</a>
-                <a href="index.html">Mention Légales</a>
-                <a href="index.html">Contact</a>
+                <a href="index.php">Acceuil</a>
+                <a href="index.php">Mention Légales</a>
+                <a href="index.php">Contact</a>
             </div>
 
            
