@@ -12,14 +12,15 @@
       <img src="Images/Open (1).png" alt="Logo OpenIT">
     </div>
     <form class="login-form" action="process_login.php" method="POST">
-  <input type="email" name="email" placeholder="E-mail" required>
-  <input type="password" name="password" placeholder="Mot de passe" required>
-  <div class="extra-options">
-    <a href="#" class="forgot-password">Mot de passe oublié ?</a>
-  </div>
-  <button type="submit">Se connecter</button>
-  <a href="inscription.php" class="create-account">Créer un compte</a>
-</form>
+      <input type="email" name="email" placeholder="E-mail" required>
+      <input type="password" name="password" placeholder="Mot de passe" required>
+      <div class="extra-options">
+        <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+      </div>
+      <button type="submit">Se connecter</button>
+      <a href="inscription.php" class="create-account">Créer un compte</a>
+    </form>
   </div>
 </body>
 </html>
+
