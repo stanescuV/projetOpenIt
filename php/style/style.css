@@ -1,0 +1,141 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background-color: #f2f2f5;
+        }
+
+        header .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        header a {
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 26.4px;
+            color: #1F66FF;
+            transition: color 0.3s;
+        }
+
+        header a:hover {
+            color: #FF6600;
+        }
+
+        header .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #6B6B6B;
+            border-radius: 40px;
+            padding: 10px 20px;
+        }
+
+        header .search-bar input {
+            border: none;
+            outline: none;
+        }
+
+        header .settings {
+            cursor: pointer;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #main .film {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #FFFFFF;
+            border: 1px solid #6B6B6B;
+            border-radius: 40px;
+            padding: 16px 22px;
+            width: 700px;
+        }
+
+        .heart {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        
+        .heart-icon {
+            transition: fill 0.3s ease;
+        }
+        
+
+        .heart:hover {
+            filter: brightness(0.8);
+        }
+
+        .heart.active {
+            background: url('images/heart.svg') no-repeat center center;
+            background-size: contain;
+            filter: hue-rotate(180deg) saturate(10) brightness(1.2);
+        }
+
+        #main .film .minus {
+            cursor: pointer;
+            width: 30px;
+            height: 6px;
+            background-color: #000000;
+            border-radius: 3px;
+        }
+
+        #main .film .image {
+            width: 400px;
+            height: 280px;
+            background-color: #D9D9D9;
+        }
+
+        footer {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 20px;
+            background-color: #1F66FF;
+            width: 100%;
+        }
+
+        footer a {
+            display:flex;
+            flex-direction: column;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 26.4px;
+            color: #F9DD0B;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #FFFFFF;
+        }
+    

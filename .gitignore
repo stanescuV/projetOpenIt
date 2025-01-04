@@ -1,0 +1,3 @@
+# Ignorer les fichiers et répertoires MySQL
+mysql/data/
+mysql.sock
