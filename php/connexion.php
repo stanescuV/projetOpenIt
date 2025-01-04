@@ -1,11 +1,23 @@
+<?php
+session_start(); // Start session to access session variables
+
+// If the user is already logged in, redirect to index.php
+if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+  header("Location: index.php");
+  exit(); // Ensure that the rest of the script does not execute
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion OpenIT</title>
   <link rel="stylesheet" href="style/connexion.css">
 </head>
+
 <body>
   <div class="container">
     <div class="logo">
@@ -22,5 +34,5 @@
     </form>
   </div>
 </body>
-</html>
 
+</html>

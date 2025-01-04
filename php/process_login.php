@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $host = 'mysql';
 $user = 'user';
 $password = 'password';
@@ -23,7 +25,15 @@ if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
 
     if (password_verify($password, $user['password'])) {
-       header("Location: index.php");
+
+        // Start the session and store user data
+        session_start();
+        $_SESSION['user_logged_in'] = true;
+        $_SESSION['user_email'] = $email;
+
+
+        header("Location: index.php");
+        exit();
     } else {
         echo "Mot de passe incorrect.";
     }
