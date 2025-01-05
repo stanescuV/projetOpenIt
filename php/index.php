@@ -1,10 +1,34 @@
+<?php
+// Connexion à la base de données
+$pdo = new PDO('mysql:host=localhost:8080;dbname=openit', 'user', 'password');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Pour voir les erreurs en cas de problème
+
+// Gestion de l'ajout/enlèvement des films aux favoris
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_favorite'])) {
+    // Récupérer l'ID du film et son état actuel des favoris
+    $filmId = (int)$_POST['film_id'];
+    $isFavorite = (int)$_POST['is_favorite'];
+    
+    // Mettre à jour l'état des favoris (bascule entre 0 et 1)
+    $stmt = $pdo->prepare("UPDATE films SET is_favorite = :is_favorite WHERE id = :id");
+    $stmt->execute(['is_favorite' => !$isFavorite, 'id' => $filmId]);
+
+    // Rediriger pour éviter la soumission multiple du formulaire
+    header('Location: index.php');
+    exit;
+}
+
+// Récupérer tous les films depuis la base de données
+$films = $pdo->query("SELECT * FROM films")->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
-    <title>Document</title>
+    <title>Liste des Films</title>
 </head>
 <body>
     <div id="container">
@@ -15,85 +39,50 @@
             <div class="nav-links">
                 <a href="index.php">Acceuil</a>
                 <a href="index.php">Liste Films</a>
-                <a href="page_fav.php">Liste Favorite</a>
+                <a href="page_fav.php">Liste Favoris</a>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Rechercher">
-                <button type="submit">Search</button>
+            <?php if ($is_logged_in): ?>
+            <div class="logout-button">
+                <form method="POST" action="deconnexion.php">
+                    <button type="submit" name="logout">Se Déconnecter</button>
+                </form>
             </div>
-            <div class="settings">
-                <img src="images/settings.png" alt="Settings">
+        <?php else: ?>
+            <div class="login-link">
+                <a href="connexion.php">Se connecter</a>
             </div>
+        <?php endif; ?>
         </header>
         
         <div id="main">
+            <?php foreach ($films as $film): ?>
             <div class="film">
                 <div class="image">
-                    <img src="images/film.jpg" alt="Film 1">
+                    <img src="<?= htmlspecialchars($film['poster']) ?>" alt="<?= htmlspecialchars($film['title']) ?>">
                 </div>
-                <p>Film:</p>
-                <div class="minus"></div>
-                <div class="heart">
-                    <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1 7.8 7.8 7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
-                    </svg>
-                </div>
-                
+                <p><?= htmlspecialchars($film['title']) ?></p>
+                <!-- Formulaire pour ajouter/enlever des favoris -->
+                <form method="POST" action="index.php">
+                    <input type="hidden" name="film_id" value="<?= $film['id'] ?>">
+                    <input type="hidden" name="is_favorite" value="<?= $film['is_favorite'] ?>">
+                    <button type="submit" name="toggle_favorite">
+                        <?= $film['is_favorite'] ? 'Enlever des Favoris' : 'Ajouter aux Favoris' ?>
+                    </button>
+                </form>
             </div>
-            <div class="film">
-                <div class="image">
-                    <img src="images/film.jpg" alt="Film 2">
-                </div>
-                <p>Film:</p>
-                <div class="minus"></div>
-                <div class="heart">
-                    <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1 7.8 7.8 7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
-                    </svg>
-                </div>
-                
-            </div>
-            <div class="film">
-                <div class="image">
-                    <img src="images/film.jpg" alt="Film 3">
-                </div>
-                <p>Film:</p>
-                <div class="minus"></div>
-                <div class="heart">
-                    <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1 7.8 7.8 7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
-                    </svg>
-                </div>
-                
-            </div>
+            <?php endforeach; ?>
         </div>
         
         <footer>
-            
             <div id="image_openit_blue">
                 <img src="images/openit.png" alt="OpenIt image" width="100px" height="100px">
             </div>
-
-            <div class='footerLinks'>
+            <div class="footerLinks">
                 <a href="index.php">Acceuil</a>
                 <a href="index.php">Mention Légales</a>
                 <a href="index.php">Contact</a>
             </div>
-
-           
         </footer>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll(".heart").forEach(heart => {
-                heart.addEventListener("click", () => {
-                    const svg = heart.querySelector('.heart-icon');
-                    const isActive = svg.getAttribute('fill') === 'red';
-                    svg.setAttribute('fill', isActive ? 'none' : 'red');
-                });
-            });
-        });
-
-    </script>
 </body>
 </html>
