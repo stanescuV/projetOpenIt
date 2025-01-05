@@ -1,3 +1,71 @@
+<?php
+session_start();
+
+$host = 'mysql';
+$user = 'user';
+$password = 'password';
+$dbname = 'openit';
+
+$conn = new mysqli($host, $user, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Erreur de connexion : " . $conn->connect_error);
+}
+
+// Handling movie creation
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieInput'])) {
+    $movieInput = $_POST['movieInput'];
+
+    if (!empty($movieInput)) {
+        // Insert the new movie into the database
+        $userId = $_SESSION['user_id']; // Assuming the user is logged in
+        $sql = "INSERT INTO movies (title, user_id, favorie) VALUES (?, ?, 0)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $movieInput, $userId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Redirect to the same page to show the newly added movie
+        header("Location: index.php");
+        exit();
+    } else {
+        $errorMessage = "Please enter a movie name.";
+    }
+}
+
+// Fetch movies for the current user
+$userId = $_SESSION['user_id']; // Assuming the user is logged in
+$sql = "SELECT * FROM movies WHERE user_id = ?"; // Fetch all movies for the user
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+$movies = $result->fetch_all(MYSQLI_ASSOC);
+
+$stmt->close();
+$conn->close();
+
+// Handling favorite toggling through the form submission
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieId']) && isset($_POST['favorite'])) {
+    $movieId = $_POST['movieId'];
+    $favorite = $_POST['favorite'];
+
+    $conn = new mysqli($host, $user, $password, $dbname);
+    if ($conn->connect_error) {
+        die("Erreur de connexion : " . $conn->connect_error);
+    }
+    $sql = "UPDATE movies SET favorie = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $favorite, $movieId);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    header("Location: index.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -5,7 +73,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
-    <title>Document</title>
+    <title>Liste des Films</title>
 </head>
 
 <body>
@@ -29,10 +97,45 @@
         </header>
 
         <div id="main">
-            <label>Create Movie</label>
-            <input type='text' id="movieInput">
-            <button id='createButton'>Create</button>
-            <div id="moviesContainer"></div>
+            <form method="POST">
+                <input type="text" name="movieInput" id="movieInput" placeholder="Enter movie name">
+                <button type="submit" id="createButton">Add Movie</button>
+            </form>
+
+            <?php if (isset($errorMessage)): ?>
+                <p style="color: red;"><?php echo $errorMessage; ?></p>
+            <?php endif; ?>
+
+            <div id="moviesContainer">
+                <?php if (empty($movies)): ?>
+                    <p>Aucun film trouvé.</p>
+                <?php else: ?>
+                    <?php foreach ($movies as $movie): ?>
+                        <div class="film" id="movie-<?php echo $movie['id']; ?>">
+                            <div class="image">
+                                <img src="images/film.jpg" alt="Film">
+                            </div>
+                            <p>Film: <?php echo htmlspecialchars($movie['title']); ?></p>
+
+                            <form method="POST">
+                                <input type="hidden" name="movieId" value="<?php echo $movie['id']; ?>">
+                                <input type="hidden" name="favorite" value="<?php echo $movie['favorie'] == 1 ? 0 : 1; ?>">
+                                <button type="submit" class="favorite-button">
+                                    <?php echo $movie['favorie'] == 1 ? 'Remove from Favorites' : 'Add to Favorites'; ?>
+                                </button>
+                            </form>
+
+                            <form method="POST" action="process_deleteMovie.php" style="display: inline;">
+                                <input type="hidden" name="deleteMovieId" value="<?php echo $movie['id']; ?>">
+                                <button type="submit" class="delete-button"
+                                    onclick="return confirm('Are you sure you want to delete this movie?');">
+                                    Delete Movie
+                                </button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
 
         <footer>
@@ -46,139 +149,6 @@
             </div>
         </footer>
     </div>
-
-    <script>
-        let movies = JSON.parse(localStorage.getItem('movies')) || [];
-        let favoris = JSON.parse(localStorage.getItem('favoris')) || [];
-
-        // fonctions pour la gestion du localStorage
-        function addMovie(movieName) {
-            movies.push(movieName);
-            localStorage.setItem('movies', JSON.stringify(movies));
-        }
-
-        function getMovies() {
-            return JSON.parse(localStorage.getItem('movies')) || [];
-        }
-
-        function removeMovie(movieName) {
-            // jsp si un user peut arriver à faire ça mais bon, faut se méfier
-            if (movies.length <= 0) {
-                window.alert("You cannot remove an item that isn't added");
-            }
-
-            movies = movies.filter(movie => movie !== movieName);
-            localStorage.setItem('movies', JSON.stringify(movies));
-        }
-
-        function addFavoris(movieName) {
-            if (!favoris.includes(movieName)) {
-                favoris.push(movieName);
-                localStorage.setItem('favoris', JSON.stringify(favoris));
-            }
-        }
-
-        function removeFavoris(movieName) {
-            favoris = favoris.filter(movie => movie !== movieName);
-            localStorage.setItem('favoris', JSON.stringify(favoris));
-        }
-
-        function getFavoris() {
-            return JSON.parse(localStorage.getItem('favoris')) || [];
-        }
-
-        // Function to create films dynamically
-        document.getElementById('createButton').addEventListener('click', function () {
-            const movieName = document.getElementById('movieInput').value;
-
-            if (movies.includes(movieName)) {
-                window.alert("Movie already added!");
-                return;
-            }
-
-            addMovie(movieName);
-
-            if (movieName !== "") {
-                const movieDiv =
-                    `<div class="film" id="${movieName}">
-                        <div class="image">
-                            <img src="images/film.jpg" alt="Film 1">
-                        </div>
-                        <p>Film: ${movieName}</p>
-                        <div class="minus"></div>
-                        <div class="heart" data-movie-name="${movieName}">
-                            <svg class="heart-icon" id="heart-${movieName}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1 7.8 7.8 7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
-                            </svg>
-                        </div>
-                    </div>`;
-                document.getElementById('moviesContainer').innerHTML += movieDiv;
-                document.getElementById('movieInput').value = '';
-            } else {
-                window.alert('Please enter the film name');
-            }
-        });
-
-        // Render containers on screen au debut
-        let moviesInContainer = getMovies();
-        if (moviesInContainer.length > 0) {
-            moviesInContainer.forEach((movie) => {
-                const movieDiv =
-                    `<div class="film" id="${movie}">
-                        <div class="image">
-                            <img src="images/film.jpg" alt="Film 1">
-                        </div>
-                        <p>Film: ${movie}</p>
-                        <div class="minus"></div>
-                        <div class="heart" data-movie-name="${movie}">
-                            <svg class="heart-icon" id="heart-${movie}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1 7.8 7.8 7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
-                            </svg>
-                        </div>
-                    </div>`;
-                document.getElementById('moviesContainer').innerHTML += movieDiv;
-            });
-        }
-
-        // makes <3 red :)
-        const moviesContainer = document.getElementById('moviesContainer');
-        moviesContainer.addEventListener('click', function (event) {
-            const heart = event.target.closest('.heart');
-            if (!heart) return;
-
-            const svg = heart.querySelector('.heart-icon');
-            if (!svg) return;
-
-            const isActive = svg.getAttribute('fill') === 'red';
-            svg.setAttribute('fill', isActive ? 'none' : 'red');
-
-            const movieName = heart.getAttribute('data-movie-name');
-            if (!movieName) return;
-
-            if (!isActive) {
-                addFavoris(movieName);
-                window.alert(`${movieName} has been added to favorites`);
-            } else {
-                removeFavoris(movieName);
-                window.alert(`${movieName} has been removed from favorites`);
-            }
-        });
-
-        // Removes movies from container, favorites, and movies
-        moviesContainer.addEventListener('click', function (event) {
-            const minus = event.target.closest('.minus');
-            if (!minus) return;
-
-            const movieElement = minus.closest('.film');
-            if (!movieElement) return;
-
-            const movieName = movieElement.id;
-
-            removeFavoris(movieName);
-            removeMovie(movieName);
-            movieElement.remove();
-        });
-    </script>
 </body>
 
 </html>
