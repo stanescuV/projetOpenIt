@@ -5,6 +5,7 @@ $host = 'mysql';
 $user = 'user';
 $password = 'password';
 $dbname = 'openit';
+$is_logged_in = isset($_SESSION['user_id']);
 
 $conn = new mysqli($host, $user, $password, $dbname);
 
@@ -70,9 +71,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieId']) && isset($
                 <input type="text" placeholder="Rechercher">
                 <button type="submit">Search</button>
             </div>
-            <div class="settings">
-                <img src="images/settings.png" alt="Settings">
+            <?php if ($is_logged_in): ?>
+            <div class="logout-button">
+                <form method="POST" action="deconnexion.php">
+                    <button type="submit" name="logout">Se Déconnecter</button>
+                </form>
             </div>
+        <?php endif; ?>
         </header>
 
         <div id="main">
