@@ -17,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $movieId = $_POST['movieId'];
         $favorite = $_POST['favorite'];
 
-        // Update the favorite status of the movie in the database
         $sql = "UPDATE movies SET favorie = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $favorite, $movieId);

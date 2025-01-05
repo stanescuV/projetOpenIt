@@ -25,10 +25,9 @@ if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
 
     if (password_verify($password, $user['password'])) {
-        // Start the session and store user data
         $_SESSION['user_logged_in'] = true;
         $_SESSION['user_email'] = $email;
-        $_SESSION['user_id'] = $user['id']; // on garde le user id dans la session 
+        $_SESSION['user_id'] = $user['id'];
 
         header("Location: index.php");
         exit();

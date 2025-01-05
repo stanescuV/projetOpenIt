@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $userId = $_SESSION['user_id'];
         $favorite = 0;
 
-        // Insert the movie into the database
         $sql = "INSERT INTO movies (user_id, title, favorie) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("isi", $userId, $movieName, $favorite);

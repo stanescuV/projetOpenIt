@@ -28,7 +28,7 @@
   }
   .logo {
     display: flex;
-    justify-content: center;  /* Centre horizontalement */
+    justify-content: center;
   }
   
   .signup-form {
@@ -40,17 +40,17 @@
   .signup-form input[type="email"],
   .signup-form input[type="password"] {
     display: flex;
-    width: 100%;  /* S'adapte à la largeur du parent */
-    max-width: 500px;  /* Fixe une largeur maximale, vous pouvez ajuster cette valeur */
-    height: 40px;  /* Réduit la hauteur du champ */
-    padding: 8px 16px;  /* Réduit le padding pour alléger l'apparence */
-    align-items: center;  /* Aligne le contenu au centre (verticalement) */
-    gap: 8px;  /* Réduit l'écart entre les éléments enfants */
+    width: 100%;
+    max-width: 500px;
+    height: 40px;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 8px;
     flex-shrink: 0;
     border-radius: 40px;
     border: 1px solid #F5F5F5;
     background: #FFF;
-    font-size: 14px;  /* Réduit la taille du texte */
+    font-size: 14px;
     color: #333;
     outline: none;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -61,7 +61,7 @@
   .signup-form input[type="email"]:focus,
   .signup-form input[type="password"]:focus {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    transform: scale(1.02); /* Légère mise en avant */
+    transform: scale(1.02);
     
   }
   
@@ -88,15 +88,15 @@
     gap: 10px;
     border-radius: 35px;
     background: linear-gradient(119deg, #1F66FF -3.18%, rgba(36, 105, 249, 0.61) 76.78%);
-    color: white;  /* Assure que le texte soit blanc */
-    font-size: 16px;  /* Taille du texte */
-    border: none;  /* Enlève la bordure par défaut */
-    cursor: pointer;  /* Change le curseur pour indiquer que c'est un bouton */
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
     transition: background-color 0.3s ease;
     margin: 0 auto;
   }
   
   .signup-form button:hover {
-    background: linear-gradient(119deg, #003bb5 -3.18%, rgba(36, 105, 249, 0.9) 76.78%); /* Changement de couleur au survol */
+    background: linear-gradient(119deg, #003bb5 -3.18%, rgba(36, 105, 249, 0.9) 76.78%);
   }
   

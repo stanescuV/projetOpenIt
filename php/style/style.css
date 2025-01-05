@@ -10,7 +10,6 @@
 
         body {
             font-family: 'Quicksand', sans-serif;
-            
         }
 
         #container {
@@ -57,10 +56,6 @@
         header .search-bar input {
             border: none;
             outline: none;
-        }
-
-        header .settings {
-            cursor: pointer;
         }
 
         #main {

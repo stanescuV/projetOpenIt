@@ -5,6 +5,7 @@ $host = 'mysql';
 $user = 'user';
 $password = 'password';
 $dbname = 'openit';
+$is_logged_in = isset($_SESSION['user_id']);
 
 $conn = new mysqli($host, $user, $password, $dbname);
 
@@ -12,20 +13,17 @@ if ($conn->connect_error) {
     die("Erreur de connexion : " . $conn->connect_error);
 }
 
-// Handling movie creation
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieInput'])) {
     $movieInput = $_POST['movieInput'];
 
     if (!empty($movieInput)) {
-        // Insert the new movie into the database
-        $userId = $_SESSION['user_id']; // Assuming the user is logged in
+        $userId = $_SESSION['user_id'];
         $sql = "INSERT INTO movies (title, user_id, favorie) VALUES (?, ?, 0)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("si", $movieInput, $userId);
         $stmt->execute();
         $stmt->close();
 
-        // Redirect to the same page to show the newly added movie
         header("Location: index.php");
         exit();
     } else {
@@ -33,9 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieInput'])) {
     }
 }
 
-// Fetch movies for the current user
-$userId = $_SESSION['user_id']; // Assuming the user is logged in
-$sql = "SELECT * FROM movies WHERE user_id = ?"; // Fetch all movies for the user
+$userId = $_SESSION['user_id'];
+$sql = "SELECT * FROM movies WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $userId);
 $stmt->execute();
@@ -45,7 +42,6 @@ $movies = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 $conn->close();
 
-// Handling favorite toggling through the form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieId']) && isset($_POST['favorite'])) {
     $movieId = $_POST['movieId'];
     $favorite = $_POST['favorite'];
@@ -91,9 +87,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movieId']) && isset($
                 <input type="text" placeholder="Rechercher">
                 <button type="submit">Search</button>
             </div>
-            <div class="settings">
-                <img src="images/settings.png" alt="Settings">
+            <?php if ($is_logged_in): ?>
+            <div class="logout-button">
+                <form method="POST" action="deconnexion.php">
+                    <button type="submit" name="logout">Se Déconnecter</button>
+                </form>
             </div>
+        <?php endif; ?>
         </header>
 
         <div id="main">

@@ -1,10 +1,9 @@
 <?php
-session_start(); // Start session to access session variables
+session_start();
 
-// If the user is already logged in, redirect to index.php
 if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
   header("Location: index.php");
-  exit(); // Ensure that the rest of the script does not execute
+  exit();
 }
 ?>
 
@@ -21,7 +20,7 @@ if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) 
 <body>
   <div class="container">
     <div class="logo">
-      <img src="Images/Open (1).png" alt="Logo OpenIT">
+      <img src="images/Open (1).png" alt="Logo OpenIT">
     </div>
     <form class="login-form" action="process_login.php" method="POST">
       <input type="email" name="email" placeholder="E-mail" required>
